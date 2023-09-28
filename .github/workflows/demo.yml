@@ -1,0 +1,24 @@
+name: Kubernetes cluster on demand from Namespace
+on: [push]
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
+
+jobs:
+  run_nscloud_action:
+    runs-on: nscloud
+    name: Deploy a sample application to Namespace Cloud
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create a Kubernetes cluster on demand
+        uses: namespacelabs/nscloud-cluster-action@v0
+      - name: Apply configurations
+        run: |
+          kubectl apply -f testdata/kubernetes/demo.yaml
+      - name: Wait until Redis is available
+        run: |
+          kubectl rollout status -n demo-app --watch --timeout=90s statefulset/demo-redis-server
+      - name: Describe Pod
+        run: |
+          kubectl -n demo-app describe pod
