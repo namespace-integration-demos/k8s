@@ -11,7 +11,7 @@ jobs:
     name: Deploy a sample application to Namespace Cloud
     steps:
       - uses: actions/checkout@v3
-      - name: Create a Kubernetes cluster on demand
+      - name: Create a Kubernetes cluster on demand and configure kubectl
         uses: namespacelabs/nscloud-cluster-action@v0
       - name: Apply configurations
         run: |
